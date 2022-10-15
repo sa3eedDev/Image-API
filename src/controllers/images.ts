@@ -34,26 +34,37 @@ export const checkCache = async (
   res: express.Response,
   next: Function
 ) => {
-  // Check if image is avaliable in output file
-  if (
-    fs.existsSync(
-      path.join(__dirname, `../../output/${req.query.filename}_resized.jpg`)
-    )
-  ) {
-    // If it is avaliable check if it is the right dimensions
-    const image = await sharp(
-      path.join(__dirname, `../../output/${req.query.filename}_resized.jpg`)
-    ).metadata();
-    // if it doesn't match the dimensions make a new image else respond with the cached image
-    if (image.width != req.query.width || image.height != req.query.height) {
-      next();
-    } else {
-      res.sendFile(
-        path.join(__dirname, `../../output/${req.query.filename}_resized.jpg`)
-      );
-    }
+  const width: number = req.query.width as unknown as number;
+  const height: number = req.query.height as unknown as number;
+
+  if (isNaN(+width) || isNaN(+height)) {
+    res.status(412);
+    res.send({ error: 'height and width must be a postive number' });
+  } else if (+width < 0 || +height < 0) {
+    res.status(413);
+    res.send({ error: 'width and hight must be a postive number!' });
   } else {
-    next();
+    // Check if image is avaliable in output file
+    if (
+      fs.existsSync(
+        path.join(__dirname, `../../output/${req.query.filename}_resized.jpg`)
+      )
+    ) {
+      // If it is avaliable check if it is the right dimensions
+      const image = await sharp(
+        path.join(__dirname, `../../output/${req.query.filename}_resized.jpg`)
+      ).metadata();
+      // if it doesn't match the dimensions make a new image else respond with the cached image
+      if (image.width != req.query.width || image.height != req.query.height) {
+        next();
+      } else {
+        res.sendFile(
+          path.join(__dirname, `../../output/${req.query.filename}_resized.jpg`)
+        );
+      }
+    } else {
+      next();
+    }
   }
 };
 

@@ -52,33 +52,59 @@ var resize = function (req, res) { return __awaiter(void 0, void 0, void 0, func
             case 0:
                 width = req.query.width;
                 height = req.query.height;
-                // Use sharp to resize the image
-                return [4 /*yield*/, (0, sharp_1.default)(path_1.default.join(__dirname, "../../input/".concat(req.query.filename, ".jpg")))
-                        .resize(+width, +height) // Added '+' before the variable to make it a number
-                        .toFile("output/".concat(req.query.filename, "_resized.jpg"), function (err) {
-                        //save new resized image
-                        if (err) {
-                            //return error status if something went wrong
-                            res.status(411);
-                            res.send({ error: 'Error during resizing' });
-                        }
-                        // Responed with the new resized image
-                        res.sendFile(path_1.default.join(__dirname, "../../output/".concat(req.query.filename, "_resized.jpg")));
-                    })];
+                console.log(typeof (+width) == Number);
+                if (!(+width == NaN || +height == NaN)) return [3 /*break*/, 1];
+                console.log("not a number");
+                res.status(412);
+                res.send({ error: "height and width must be a postive number" });
+                return [3 /*break*/, 4];
             case 1:
+                if (!(+width < 0 || +height < 0)) return [3 /*break*/, 2];
+                console.log("not postive");
+                res.status(413);
+                res.send({ error: "width and hight must be a postive number" });
+                return [3 /*break*/, 4];
+            case 2: 
+            // Use sharp to resize the image
+            return [4 /*yield*/, (0, sharp_1.default)(path_1.default.join(__dirname, "../../input/".concat(req.query.filename, ".jpg")))
+                    .resize(+width, +height) // Added '+' before the variable to make it a number
+                    .toFile("output/".concat(req.query.filename, "_resized.jpg"), function (err) {
+                    //save new resized image
+                    if (err) {
+                        //return error status if something went wrong
+                        res.status(411);
+                        res.send({ error: 'Error during resizing' });
+                    }
+                    // Responed with the new resized image
+                    res.sendFile(path_1.default.join(__dirname, "../../output/".concat(req.query.filename, "_resized.jpg")));
+                })];
+            case 3:
                 // Use sharp to resize the image
                 _a.sent();
-                return [2 /*return*/];
+                _a.label = 4;
+            case 4: return [2 /*return*/];
         }
     });
 }); };
 exports.resize = resize;
 // Check cache for the resized image
 var checkCache = function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
-    var image;
+    var width, height, image;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
+                width = req.query.width;
+                height = req.query.height;
+                if (+width == NaN || +height == NaN) {
+                    console.log("not a number");
+                    res.status(412);
+                    res.send({ error: "height and width must be a postive number" });
+                }
+                else if (+width < 0 || +height < 0) {
+                    console.log("not postive");
+                    res.status(413);
+                    res.send({ error: "width and hight must be a postive number!" });
+                }
                 if (!fs_1.default.existsSync(path_1.default.join(__dirname, "../../output/".concat(req.query.filename, "_resized.jpg")))) return [3 /*break*/, 2];
                 return [4 /*yield*/, (0, sharp_1.default)(path_1.default.join(__dirname, "../../output/".concat(req.query.filename, "_resized.jpg"))).metadata()];
             case 1:

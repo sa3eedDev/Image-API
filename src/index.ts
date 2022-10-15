@@ -6,7 +6,7 @@ const port = 3000;
 
 app.use(router);
 
-app.listen(port, () => {
+app.listen(port, () : void => {
   console.log(`server running on http://localhost:${port}`);
 });
 
