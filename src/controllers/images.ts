@@ -32,7 +32,7 @@ export const resize = async (req: express.Request, res: express.Response) => {
 export const checkCache = async (
   req: express.Request,
   res: express.Response,
-  next: Function
+  next: () => void
 ) => {
   const width: number = req.query.width as unknown as number;
   const height: number = req.query.height as unknown as number;
@@ -72,7 +72,7 @@ export const checkCache = async (
 export const checkInput = async (
   req: express.Request,
   res: express.Response,
-  next: Function
+  next: () => void
 ) => {
   // If file in input file go to the next function else respond with error message
   if (

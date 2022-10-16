@@ -1,0 +1,6 @@
+src/tests
+build
+node_modules
+input
+output
+spec

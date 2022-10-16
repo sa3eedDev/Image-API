@@ -12,7 +12,7 @@
     "test": "jasmine",
     "devstart": "nodemon src/index.ts",
     "prestart": "npm run build",
-    "start" : "node build/index"
+    "start": "node build/index"
   },
   "author": "Saeed Binsalman",
   "license": "MIT",
