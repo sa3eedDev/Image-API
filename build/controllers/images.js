@@ -52,37 +52,23 @@ var resize = function (req, res) { return __awaiter(void 0, void 0, void 0, func
             case 0:
                 width = req.query.width;
                 height = req.query.height;
-                console.log(typeof (+width) == Number);
-                if (!(+width == NaN || +height == NaN)) return [3 /*break*/, 1];
-                console.log("not a number");
-                res.status(412);
-                res.send({ error: "height and width must be a postive number" });
-                return [3 /*break*/, 4];
+                // Use sharp to resize the image
+                return [4 /*yield*/, (0, sharp_1.default)(path_1.default.join(__dirname, "../../input/".concat(req.query.filename, ".jpg")))
+                        .resize(+width, +height) // Added '+' before the variable to make it a number
+                        .toFile("output/".concat(req.query.filename, "_resized.jpg"), function (err) {
+                        //save new resized image
+                        if (err) {
+                            //return error status if something went wrong
+                            res.status(411);
+                            res.send({ error: 'Error during resizing' });
+                        }
+                        // Responed with the new resized image
+                        res.sendFile(path_1.default.join(__dirname, "../../output/".concat(req.query.filename, "_resized.jpg")));
+                    })];
             case 1:
-                if (!(+width < 0 || +height < 0)) return [3 /*break*/, 2];
-                console.log("not postive");
-                res.status(413);
-                res.send({ error: "width and hight must be a postive number" });
-                return [3 /*break*/, 4];
-            case 2: 
-            // Use sharp to resize the image
-            return [4 /*yield*/, (0, sharp_1.default)(path_1.default.join(__dirname, "../../input/".concat(req.query.filename, ".jpg")))
-                    .resize(+width, +height) // Added '+' before the variable to make it a number
-                    .toFile("output/".concat(req.query.filename, "_resized.jpg"), function (err) {
-                    //save new resized image
-                    if (err) {
-                        //return error status if something went wrong
-                        res.status(411);
-                        res.send({ error: 'Error during resizing' });
-                    }
-                    // Responed with the new resized image
-                    res.sendFile(path_1.default.join(__dirname, "../../output/".concat(req.query.filename, "_resized.jpg")));
-                })];
-            case 3:
                 // Use sharp to resize the image
                 _a.sent();
-                _a.label = 4;
-            case 4: return [2 /*return*/];
+                return [2 /*return*/];
         }
     });
 }); };
@@ -95,19 +81,19 @@ var checkCache = function (req, res, next) { return __awaiter(void 0, void 0, vo
             case 0:
                 width = req.query.width;
                 height = req.query.height;
-                if (+width == NaN || +height == NaN) {
-                    console.log("not a number");
-                    res.status(412);
-                    res.send({ error: "height and width must be a postive number" });
-                }
-                else if (+width < 0 || +height < 0) {
-                    console.log("not postive");
-                    res.status(413);
-                    res.send({ error: "width and hight must be a postive number!" });
-                }
-                if (!fs_1.default.existsSync(path_1.default.join(__dirname, "../../output/".concat(req.query.filename, "_resized.jpg")))) return [3 /*break*/, 2];
-                return [4 /*yield*/, (0, sharp_1.default)(path_1.default.join(__dirname, "../../output/".concat(req.query.filename, "_resized.jpg"))).metadata()];
+                if (!(isNaN(+width) || isNaN(+height))) return [3 /*break*/, 1];
+                res.status(412);
+                res.send({ error: 'height and width must be a postive number' });
+                return [3 /*break*/, 5];
             case 1:
+                if (!(+width < 0 || +height < 0)) return [3 /*break*/, 2];
+                res.status(413);
+                res.send({ error: 'width and hight must be a postive number!' });
+                return [3 /*break*/, 5];
+            case 2:
+                if (!fs_1.default.existsSync(path_1.default.join(__dirname, "../../output/".concat(req.query.filename, "_resized.jpg")))) return [3 /*break*/, 4];
+                return [4 /*yield*/, (0, sharp_1.default)(path_1.default.join(__dirname, "../../output/".concat(req.query.filename, "_resized.jpg"))).metadata()];
+            case 3:
                 image = _a.sent();
                 // if it doesn't match the dimensions make a new image else respond with the cached image
                 if (image.width != req.query.width || image.height != req.query.height) {
@@ -116,11 +102,11 @@ var checkCache = function (req, res, next) { return __awaiter(void 0, void 0, vo
                 else {
                     res.sendFile(path_1.default.join(__dirname, "../../output/".concat(req.query.filename, "_resized.jpg")));
                 }
-                return [3 /*break*/, 3];
-            case 2:
+                return [3 /*break*/, 5];
+            case 4:
                 next();
-                _a.label = 3;
-            case 3: return [2 /*return*/];
+                _a.label = 5;
+            case 5: return [2 /*return*/];
         }
     });
 }); };
@@ -136,7 +122,7 @@ var checkInput = function (req, res, next) { return __awaiter(void 0, void 0, vo
                     next();
                 }
                 else {
-                    res.status(410);
+                    res.status(414);
                     res.send({ error: 'image not found in input file' });
                 }
                 return [2 /*return*/];

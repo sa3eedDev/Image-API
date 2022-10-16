@@ -10,7 +10,7 @@
     "build": "npx tsc",
     "pretest": "npm run build",
     "test": "jasmine",
-    "devstart": "nodemon src/index",
+    "devstart": "nodemon src/index.ts",
     "prestart": "npm run build",
     "start" : "node build/index"
   },

@@ -82,7 +82,7 @@ export const checkInput = async (
   ) {
     next();
   } else {
-    res.status(410);
+    res.status(414);
     res.send({ error: 'image not found in input file' });
   }
 };

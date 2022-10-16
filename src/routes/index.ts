@@ -2,7 +2,7 @@ import { Router } from 'express';
 import express from 'express';
 import imagesRouter from './api/images';
 
-const router = Router();
+const router: Router = Router();
 
 // Router for images API
 router.use('/api/images', imagesRouter);
