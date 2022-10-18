@@ -1,4 +1,4 @@
-import { resize, checkInput, checkCache } from '../../controllers/images';
+import { resize, checkCache } from '../../controllers/images';
 import express from 'express';
 
 describe('Test controllers functions', () => {
@@ -16,7 +16,7 @@ describe('Test controllers functions', () => {
       expect(res.statusCode).toEqual(200);
     });
   });
-  describe('test CheckCache', () => {
+  describe('test CheckCache', async () => {
     it('With string input', () => {
       let req: express.Request = express.request;
       req.query = {
@@ -26,7 +26,9 @@ describe('Test controllers functions', () => {
       };
 
       let res: express.Response = express.response;
-      checkCache(req, res, Function);
+      checkCache(req, res, Function)
+        .catch((err) => {})
+        .catch((err) => {});
       expect(res.statusCode).toEqual(412);
     });
     it('With string negative number', () => {
@@ -38,7 +40,9 @@ describe('Test controllers functions', () => {
       };
 
       let res: express.Response = express.response;
-      checkCache(req, res, Function);
+      checkCache(req, res, Function)
+        .catch((err) => {})
+        .catch((err) => {});
       expect(res.statusCode).toEqual(413);
     });
   });

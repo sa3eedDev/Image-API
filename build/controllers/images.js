@@ -86,7 +86,7 @@ var checkCache = function (req, res, next) { return __awaiter(void 0, void 0, vo
                 res.send({ error: 'height and width must be a postive number' });
                 return [3 /*break*/, 5];
             case 1:
-                if (!(+width < 0 || +height < 0)) return [3 /*break*/, 2];
+                if (!(+width <= 0 || +height <= 0)) return [3 /*break*/, 2];
                 res.status(413);
                 res.send({ error: 'width and hight must be a postive number!' });
                 return [3 /*break*/, 5];

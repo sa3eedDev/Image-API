@@ -6,7 +6,10 @@ import fs from 'fs';
 // Middlewares for image proccessing
 
 // Method to resize the image if the image it is not resized already
-export const resize = async (req: express.Request, res: express.Response) => {
+export const resize = async (
+  req: express.Request,
+  res: express.Response
+): Promise<void> => {
   // Query the arguments from the URL and get the width and height
   const width: number = req.query.width as unknown as number;
   const height: number = req.query.height as unknown as number;
@@ -33,14 +36,14 @@ export const checkCache = async (
   req: express.Request,
   res: express.Response,
   next: () => void
-) => {
+): Promise<void> => {
   const width: number = req.query.width as unknown as number;
   const height: number = req.query.height as unknown as number;
 
   if (isNaN(+width) || isNaN(+height)) {
     res.status(412);
     res.send({ error: 'height and width must be a postive number' });
-  } else if (+width < 0 || +height < 0) {
+  } else if (+width <= 0 || +height <= 0) {
     res.status(413);
     res.send({ error: 'width and hight must be a postive number!' });
   } else {
@@ -73,7 +76,7 @@ export const checkInput = async (
   req: express.Request,
   res: express.Response,
   next: () => void
-) => {
+): Promise<void> => {
   // If file in input file go to the next function else respond with error message
   if (
     await fs.existsSync(
