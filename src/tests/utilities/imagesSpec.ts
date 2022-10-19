@@ -5,10 +5,10 @@ describe('test resize', () => {
     let errorMessage = 'No error thrown.';
 
     try {
-        await resizeImage('fjord', -200, 200);
+      await resizeImage('fjord', -200, 200);
     } catch (error) {
-        let err = error as Error
-        errorMessage = err.message;
+      let err = error as Error;
+      errorMessage = err.message;
     }
     expect(errorMessage).toBe('width and hight must be a postive number!');
   });
@@ -17,10 +17,10 @@ describe('test resize', () => {
     let errorMessage = 'No error thrown.';
 
     try {
-        await resizeImage('fjord', 200, 200);
+      await resizeImage('fjord', 200, 200);
     } catch (error) {
-        let err = error as Error
-        errorMessage = err.message;
+      let err = error as Error;
+      errorMessage = err.message;
     }
     expect(errorMessage).toBe('No error thrown.');
   });
