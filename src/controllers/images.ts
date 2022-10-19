@@ -17,10 +17,17 @@ export const resize = async (
 
   // Use sharp to resize the image
   try {
-    await resizeImage(req.query.filename as string, width, height);
-    res.sendFile(
-      path.join(__dirname, `../../output/${req.query.filename}_resized.jpg`)
-    );
+    resizeImage(req.query.filename as string, width, height).then(()=>{
+      setTimeout(() => {
+        res.sendFile(
+          path.join(__dirname, `../../output/${req.query.filename}_resized.jpg`)
+        );
+      }, 100);
+      
+    })
+
+    
+
   } catch (err) {
     res.status(411);
     res.send({ error: 'Error during resizing' });
