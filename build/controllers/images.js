@@ -43,32 +43,30 @@ exports.checkInput = exports.checkCache = exports.resize = void 0;
 var sharp_1 = __importDefault(require("sharp"));
 var path_1 = __importDefault(require("path"));
 var fs_1 = __importDefault(require("fs"));
+var images_1 = require("../utilities/images");
 // Middlewares for image proccessing
 // Method to resize the image if the image it is not resized already
 var resize = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var width, height;
+    var width, height, err_1;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
                 width = req.query.width;
                 height = req.query.height;
-                // Use sharp to resize the image
-                return [4 /*yield*/, (0, sharp_1.default)(path_1.default.join(__dirname, "../../input/".concat(req.query.filename, ".jpg")))
-                        .resize(+width, +height) // Added '+' before the variable to make it a number
-                        .toFile("output/".concat(req.query.filename, "_resized.jpg"), function (err) {
-                        //save new resized image
-                        if (err) {
-                            //return error status if something went wrong
-                            res.status(411);
-                            res.send({ error: 'Error during resizing' });
-                        }
-                        // Responed with the new resized image
-                        res.sendFile(path_1.default.join(__dirname, "../../output/".concat(req.query.filename, "_resized.jpg")));
-                    })];
+                _a.label = 1;
             case 1:
-                // Use sharp to resize the image
+                _a.trys.push([1, 3, , 4]);
+                return [4 /*yield*/, (0, images_1.resizeImage)(req.query.filename, width, height)];
+            case 2:
                 _a.sent();
-                return [2 /*return*/];
+                res.sendFile(path_1.default.join(__dirname, "../../output/".concat(req.query.filename, "_resized.jpg")));
+                return [3 /*break*/, 4];
+            case 3:
+                err_1 = _a.sent();
+                res.status(411);
+                res.send({ error: 'Error during resizing' });
+                return [3 /*break*/, 4];
+            case 4: return [2 /*return*/];
         }
     });
 }); };

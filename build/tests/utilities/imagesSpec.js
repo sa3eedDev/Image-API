@@ -35,57 +35,55 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-var images_1 = require("../../controllers/images");
-var express_1 = __importDefault(require("express"));
-describe('Test controllers functions', function () {
-    describe('Resize function', function () {
-        it('Resize works', function () {
-            var req = express_1.default.request;
-            req.query = {
-                filename: 'fjord',
-                width: '200',
-                height: '200'
-            };
-            var res = express_1.default.response;
-            (0, images_1.resize)(req, res)
-                .catch(function (err) { })
-                .catch(function (err) { });
-            expect(res.statusCode).toEqual(200);
-        });
-    });
-    describe('test CheckCache', function () { return __awaiter(void 0, void 0, void 0, function () {
+var images_1 = require("../../utilities/images");
+describe('test resize', function () {
+    it('test resize with negative numbers', function () { return __awaiter(void 0, void 0, void 0, function () {
+        var errorMessage, error_1, err;
         return __generator(this, function (_a) {
-            it('With string input', function () {
-                var req = express_1.default.request;
-                req.query = {
-                    filename: 'fjord',
-                    width: 'ddfdds',
-                    height: '2'
-                };
-                var res = express_1.default.response;
-                (0, images_1.checkCache)(req, res, Function)
-                    .catch(function (err) { })
-                    .catch(function (err) { });
-                expect(res.statusCode).toEqual(412);
-            });
-            it('With string negative number', function () {
-                var req = express_1.default.request;
-                req.query = {
-                    filename: 'fjord',
-                    width: '-10',
-                    height: '2'
-                };
-                var res = express_1.default.response;
-                (0, images_1.checkCache)(req, res, Function)
-                    .catch(function (err) { })
-                    .catch(function (err) { });
-                expect(res.statusCode).toEqual(413);
-            });
-            return [2 /*return*/];
+            switch (_a.label) {
+                case 0:
+                    errorMessage = 'No error thrown.';
+                    _a.label = 1;
+                case 1:
+                    _a.trys.push([1, 3, , 4]);
+                    return [4 /*yield*/, (0, images_1.resizeImage)('fjord', -200, 200)];
+                case 2:
+                    _a.sent();
+                    return [3 /*break*/, 4];
+                case 3:
+                    error_1 = _a.sent();
+                    err = error_1;
+                    errorMessage = err.message;
+                    return [3 /*break*/, 4];
+                case 4:
+                    expect(errorMessage).toBe('width and hight must be a postive number!');
+                    return [2 /*return*/];
+            }
+        });
+    }); });
+    it('test resize with postive numbers', function () { return __awaiter(void 0, void 0, void 0, function () {
+        var errorMessage, error_2, err;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    errorMessage = 'No error thrown.';
+                    _a.label = 1;
+                case 1:
+                    _a.trys.push([1, 3, , 4]);
+                    return [4 /*yield*/, (0, images_1.resizeImage)('fjord', 200, 200)];
+                case 2:
+                    _a.sent();
+                    return [3 /*break*/, 4];
+                case 3:
+                    error_2 = _a.sent();
+                    err = error_2;
+                    errorMessage = err.message;
+                    return [3 /*break*/, 4];
+                case 4:
+                    expect(errorMessage).toBe('No error thrown.');
+                    return [2 /*return*/];
+            }
         });
     }); });
 });

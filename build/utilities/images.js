@@ -39,53 +39,28 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var images_1 = require("../../controllers/images");
-var express_1 = __importDefault(require("express"));
-describe('Test controllers functions', function () {
-    describe('Resize function', function () {
-        it('Resize works', function () {
-            var req = express_1.default.request;
-            req.query = {
-                filename: 'fjord',
-                width: '200',
-                height: '200'
-            };
-            var res = express_1.default.response;
-            (0, images_1.resize)(req, res)
-                .catch(function (err) { })
-                .catch(function (err) { });
-            expect(res.statusCode).toEqual(200);
-        });
+exports.resizeImage = void 0;
+var path_1 = __importDefault(require("path"));
+var sharp_1 = __importDefault(require("sharp"));
+var resizeImage = function (filename, width, height) { return __awaiter(void 0, void 0, void 0, function () {
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                if (!(+width <= 0 || +height <= 0)) return [3 /*break*/, 1];
+                throw new Error('width and hight must be a postive number!');
+            case 1: return [4 /*yield*/, (0, sharp_1.default)(path_1.default.join(__dirname, "../../input/".concat(filename, ".jpg")))
+                    .resize(+width, +height) // Added '+' before the variable to make it a number
+                    .toFile("output/".concat(filename, "_resized.jpg"), function (err) {
+                    if (err) {
+                        //return error status if something went wrong
+                        console.error(err);
+                    }
+                })];
+            case 2:
+                _a.sent();
+                _a.label = 3;
+            case 3: return [2 /*return*/];
+        }
     });
-    describe('test CheckCache', function () { return __awaiter(void 0, void 0, void 0, function () {
-        return __generator(this, function (_a) {
-            it('With string input', function () {
-                var req = express_1.default.request;
-                req.query = {
-                    filename: 'fjord',
-                    width: 'ddfdds',
-                    height: '2'
-                };
-                var res = express_1.default.response;
-                (0, images_1.checkCache)(req, res, Function)
-                    .catch(function (err) { })
-                    .catch(function (err) { });
-                expect(res.statusCode).toEqual(412);
-            });
-            it('With string negative number', function () {
-                var req = express_1.default.request;
-                req.query = {
-                    filename: 'fjord',
-                    width: '-10',
-                    height: '2'
-                };
-                var res = express_1.default.response;
-                (0, images_1.checkCache)(req, res, Function)
-                    .catch(function (err) { })
-                    .catch(function (err) { });
-                expect(res.statusCode).toEqual(413);
-            });
-            return [2 /*return*/];
-        });
-    }); });
-});
+}); };
+exports.resizeImage = resizeImage;

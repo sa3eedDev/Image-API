@@ -12,7 +12,9 @@ describe('Test controllers functions', () => {
       };
 
       let res: express.Response = express.response;
-      resize(req, res);
+      resize(req, res)
+        .catch((err) => {})
+        .catch((err) => {});
       expect(res.statusCode).toEqual(200);
     });
   });

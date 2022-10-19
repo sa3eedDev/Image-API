@@ -2,6 +2,7 @@ import sharp from 'sharp';
 import express from 'express';
 import path from 'path';
 import fs from 'fs';
+import { resizeImage } from '../utilities/images';
 
 // Middlewares for image proccessing
 
@@ -15,20 +16,15 @@ export const resize = async (
   const height: number = req.query.height as unknown as number;
 
   // Use sharp to resize the image
-  await sharp(path.join(__dirname, `../../input/${req.query.filename}.jpg`))
-    .resize(+width, +height) // Added '+' before the variable to make it a number
-    .toFile(`output/${req.query.filename}_resized.jpg`, function (err: Error) {
-      //save new resized image
-      if (err) {
-        //return error status if something went wrong
-        res.status(411);
-        res.send({ error: 'Error during resizing' });
-      }
-      // Responed with the new resized image
-      res.sendFile(
-        path.join(__dirname, `../../output/${req.query.filename}_resized.jpg`)
-      );
-    });
+  try {
+    await resizeImage(req.query.filename as string, width, height);
+    res.sendFile(
+      path.join(__dirname, `../../output/${req.query.filename}_resized.jpg`)
+    );
+  } catch (err) {
+    res.status(411);
+    res.send({ error: 'Error during resizing' });
+  }
 };
 
 // Check cache for the resized image
